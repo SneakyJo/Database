@@ -25,7 +25,9 @@ public:
 
   void SetDate(const int& _year,const ushort& _month,const ushort& _day)
   {
-    year = _year; month = _month; day = _day;
+    year = _year;
+    month = _month;
+    day = _day;
   }
 
   int getYear() const { return year; }
@@ -56,7 +58,9 @@ bool operator< (const Date& date1, const Date& date2)           // Для кон
     int total2 = date2.getMonth() * 31 + date2.getDay();
 
     if (total1 < total2)
+    {
       return true;
+    }
   }
 
   return false;
@@ -65,7 +69,10 @@ bool operator< (const Date& date1, const Date& date2)           // Для кон
 bool operator== (const Date& date1, const Date& date2)
 {
   if (date1.getYear() == date2.getYear() && date1.getMonth() == date2.getMonth() && date1.getDay() == date2.getDay())
+  {
     return true;
+  }
+
   return false;
 }
 
@@ -87,9 +94,15 @@ public:
     Date _newDate;
 
       for (const auto& [key, value] : _events)
+      {
         if (CheckDate(key, _newDate))
+        {
           for (const string& str : value)
+          {
               events[_newDate].insert(str);
+          }
+        }
+      }
   }
 
   Database(const string& _date, const set<string>& _events)
@@ -97,8 +110,12 @@ public:
     Date _newDate;
 
     if (CheckDate(_date, _newDate))
+    {
       for (const string& str : _events)
+      {
         events[_newDate].insert(str);
+      }
+    }
   }
 
   Database(const string& _date, const string& _event)
@@ -106,7 +123,9 @@ public:
     Date _newDate;
 
     if (CheckDate(_date, _newDate))
+    {
       events[_newDate].insert(_event);
+    }
   }
 
   bool AddEvent(const string& _date, const string& _event)       // Добавить событие в дате
@@ -127,12 +146,14 @@ public:
     Date _newDate;
 
     if (CheckDate(_date, _newDate))
+    {
       if (events[_newDate].count(_event) > 0)
       {
         events[_newDate].erase(events[_newDate].find(_event));
         cout << "Deleted successfully." << endl;
         return true;
       }
+    }
 
     cout << "Event not found." << endl;
 
@@ -198,7 +219,7 @@ private:
 map <Date, set<string>> events;
 
 
-bool CheckDate(string _dateStr, Date& inputDate) const   // Проверяем строку на корректность ввода и возвращаем удобного вида Дату
+bool CheckDate(const string& _dateStr, Date& inputDate) const   // Проверяем строку на корректность ввода и возвращаем удобного вида Дату
 {
   size_t pos1 = 0;
   size_t pos2 = 0;
@@ -207,22 +228,22 @@ bool CheckDate(string _dateStr, Date& inputDate) const   // Проверяем �
 
   int ourDate[2];                     // 3 значение (день) сразу в параметры кинем
 
-  const string err_copy = _dateStr;      // Ошибка, вы ввели: err_copy
+  string changeableDate = _dateStr;      // Изменяемое место
 
   try{
 
    while (i < 2)                        // Считаем только год и месяц в цикле
    {
-     pos2 = _dateStr.find(separator);            // 2012-*
+     pos2 = changeableDate.find(separator);            // 2012-*
 
      if (pos2 == 0)       // -1-11-11 корректная дата
      {
          pos1 = pos2;
-         pos2 = _dateStr.find(separator, pos1 + 1);
+         pos2 = changeableDate.find(separator, pos1 + 1);
      }
 
      int len = pos2 - pos1;
-     string sub = _dateStr.substr(0, len);    // переменные для наглядности действия
+     string sub = changeableDate.substr(0, len);    // переменные для наглядности действия
 
      int num = stoi(sub);                     // Если что, кидает throw
      i++;
@@ -233,10 +254,10 @@ bool CheckDate(string _dateStr, Date& inputDate) const   // Проверяем �
 
      ourDate[i - 1] = num;                  // Храним преобразованные год и месяц в массиве
 
-     _dateStr.erase(_dateStr.begin(), _dateStr.begin() + len + 1);   // Удаляем отработанное
+     changeableDate.erase(changeableDate.begin(), changeableDate.begin() + len + 1);   // Удаляем отработанное
     }
 
-    int num = stoi(_dateStr);      // формат не подразумевает '-' после дня, поэтому остаток строки и есть дни
+    int num = stoi(changeableDate);      // формат не подразумевает '-' после дня, поэтому остаток строки и есть дни
     if (num > 31 || num < 0)
       throw runtime_error("Invalid day"s);
 
@@ -246,7 +267,7 @@ bool CheckDate(string _dateStr, Date& inputDate) const   // Проверяем �
   }
   catch(exception& ex)
   {
-    cout << "Wrong date format: "s << err_copy << " (" << ex.what() << ")" << endl;
+    cout << "Wrong date format: "s << _dateStr << " (" << ex.what() << ")" << endl;
     return false;
   }
 
