@@ -12,6 +12,7 @@
 using namespace std;
 
 typedef unsigned short ushort;
+typedef map<Date, set<string>> database_type;
 
 class Date{
 public:
@@ -84,7 +85,7 @@ public:
 
   Database() { }
 
-  Database(const map<Date, set<string>>& _events)
+  Database(const database_type& _events)
   {
       events = _events;
   }
@@ -216,7 +217,7 @@ public:
   }
 
 private:
-map <Date, set<string>> events;
+database_type events;
 
 
 bool CheckDate(const string& _dateStr, Date& inputDate) const   // Проверяем строку на корректность ввода и возвращаем удобного вида Дату
