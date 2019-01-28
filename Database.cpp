@@ -8,6 +8,7 @@
 #include <map>
 #include <set>
 #include <iomanip>
+#include <tuple>
 
 using namespace std;
 
@@ -45,26 +46,8 @@ private:
 
 bool operator< (const Date& date1, const Date& date2)           // Для контейнера map
 {
-  if (date1.getYear() < date2.getYear())                        // Дни и месяцы ограничены, а годы - нет
-  {
-    return true;
-  }
-  else if (date1.getYear() > date2.getYear())
-  {
-    return false;
-  }
-  else
-  {
-    int total1 = date1.getMonth() * 31 + date1.getDay();        // Все дни = 31
-    int total2 = date2.getMonth() * 31 + date2.getDay();
-
-    if (total1 < total2)
-    {
-      return true;
-    }
-  }
-
-  return false;
+  return tuple<int, ushort, ushort>(date1.getYear(), date1.getMonth(), date1.getDay()) <
+    tuple<int, ushort, ushort>(date2.getYear(), date2.getMonth(), date2.getDay());
 }
 
 bool operator== (const Date& date1, const Date& date2)
